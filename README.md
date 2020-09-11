@@ -31,5 +31,9 @@ as their development drove the accretion of rules and functions in Wrangler itse
 ## Events expected and event(s) raised when actions are taken
 
 - `wrangler:new_child_request` attributes `name`, `backgroundColor`, and others from user
--- raise event `wrangler:new_child_created` attributes passed in and `eci` of created pico
--- raise event `wrangler:child_creation_failed` attributes passed in
+  - raise event `wrangler:new_child_created` attributes passed in and `eci` of created pico
+  - raise event `wrangler:child_creation_failed` attributes passed in
+
+- `wrangler:child_deletion_request` attribute `eci` (which must be the "family" ECI)
+  - raise event `wrangler:child_deleted` attributes passed in
+  
