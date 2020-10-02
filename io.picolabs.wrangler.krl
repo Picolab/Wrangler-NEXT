@@ -95,7 +95,7 @@ ruleset io.picolabs.wrangler {
     ctx:install(url=url,config=config)
     fired {
       raise wrangler event "ruleset_installed"
-        attributes event:attrs.put({"rid": rid})
+        attributes event:attrs.put({"rids": [rid]})
     }
   }
 }

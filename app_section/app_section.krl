@@ -9,7 +9,7 @@ ruleset app_section {
   }
   rule pico_ruleset_added {
     select when wrangler ruleset_installed
-      where event:attr("rid") == ctx:rid
+      where event:attr("rids") >< ctx:rid
     pre {
       section_id = event:attr("section_id")
     }
