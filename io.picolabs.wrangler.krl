@@ -1,7 +1,7 @@
 ruleset io.picolabs.wrangler {
   meta {
     version "0.0.0"
-    provides children
+    provides channels, children, createChannel
     shares channels, rulesets, engine_ui_ruleset,rfc3986
   }
   global {
@@ -26,6 +26,14 @@ ruleset io.picolabs.wrangler {
     rfc3986 = function(absoluteURL,rid){
       parts = absoluteURL.split("/")
       parts.splice(parts.length()-1,1,rid+".krl").join("/")
+    }
+    createChannel = defaction(tags,eventPolicy,queryPolicy){
+      ctx:newChannel(
+        tags=tags,
+        eventPolicy=eventPolicy,
+        queryPolicy=queryPolicy
+      ) setting(channel)
+      return channel
     }
   }
   rule create_child_pico {
