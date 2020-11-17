@@ -88,7 +88,7 @@ ruleset io.picolabs.wrangler {
     pre {
       attr_url = event:attr("url")
       rid = event:attr("rid")
-          || attr_url.extract(re#.*([.]krl)$#).head()
+          || attr_url.extract(re#.*/([^/]+)[.]krl$#).head()
       url = attr_url || rfc3986(event:attr("absoluteURL"),rid)
       config = event:attr("config") || {}
     }
