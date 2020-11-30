@@ -2,9 +2,12 @@ ruleset io.picolabs.wrangler {
   meta {
     version "0.0.0"
     provides channels, children, createChannel
-    shares channels, rulesets, engine_ui_ruleset,rfc3986
+    shares channels, rulesets, engine_ui_ruleset, rfc3986, parent_eci ,isThisMe
   }
   global {
+    isThisMe = function(eci){
+      ctx:channels.any(function(c){c{"id"}==eci})
+    }
     channels = function(){
       ctx:channels
     }
@@ -13,6 +16,9 @@ ruleset io.picolabs.wrangler {
     }
     children = function() {
       ctx:children
+    }
+    parent_eci = function() {
+      ctx:parent
     }
     engine_ui_rid = "io.picolabs.pico-engine-ui"
     engine_ui_ruleset = function(){
