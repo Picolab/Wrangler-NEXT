@@ -37,3 +37,14 @@ as their development drove the accretion of rules and functions in Wrangler itse
 - `wrangler:child_deletion_request` attribute `eci` (which must be the "family" ECI)
   - raise event `wrangler:child_deleted` attributes passed in
   
+## Deprecated
+
+Have decided against this approach
+(building up a new wrangler ruleset from scratch).
+
+Instead the older ruleset is being made to compile in the
+NEXT pico-engine,
+and being modified to meet the needs described herein.
+
+This work is done in [this repo](https://github.com/Picolab/pico-engine/tree/pico-framework/packages/pico-engine/krl).
+
