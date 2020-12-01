@@ -70,8 +70,9 @@ ruleset app_section_collection {
         domain="wrangler",
         name="install_ruleset_request",
         attrs= {
-          "absoluteURL":ctx:rid_url,
-          "rid":"app_section",
+          //"absoluteURL":ctx:rid_url,
+          //"rid":"app_section",
+          "url":"https://raw.githubusercontent.com/Picolab/Wrangler-NEXT/master/app_section/app_section.krl",
           "config":{},
           "section_id":section_id
         }
