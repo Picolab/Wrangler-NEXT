@@ -46,5 +46,5 @@ Instead the older ruleset is being made to compile in the
 NEXT pico-engine,
 and being modified to meet the needs described herein.
 
-This work is done in [this repo](https://github.com/Picolab/pico-engine/tree/pico-framework/packages/pico-engine/krl).
+This work is done in [this repo](https://github.com/Picolab/pico-engine/tree/master/packages/pico-engine/krl).
 
