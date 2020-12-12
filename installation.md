@@ -17,9 +17,9 @@ For how this looks when it's being used, see [this page](https://github.com/Pico
       rid = event:attr("rid")
           || attr_url.extract(re#.*/([^/]+)[.]krl$#).head()
       url = attr_url || rfc3986(event:attr("absoluteURL"),rid)
-      config = event:attr("config") || {}
+      config = event:attr("config").defaultsTo({})
     }
-    ctx:install(url=url,config=config)
+    ctx:install(url,config)
     fired {
       raise wrangler event "ruleset_installed"
         attributes event:attrs.put({"rids": [rid]})
@@ -34,26 +34,24 @@ For how this looks when it's being used, see [this page](https://github.com/Pico
     select when wrangler install_ruleset_request
       absoluteURL re#(.+)#   // required
       rid re#(.+)#.          // required
-      config re#(.*)#        // optional
-      setting(absoluteURL,rid,config)
+      setting(absoluteURL,rid)
     pre {
       parts = absoluteURL.split("/")
       url = parts.splice(parts.length()-1,1,rid+".krl").join("/")
     }
     fired {
       raise wrangler event "install_ruleset_request"
-        attributes {"url":url, "config":config)
+        attributes {"url":url, "config":event:attr("config"))
   }
   
   rule install_absolute_ruleset {
     select when wrangler install_ruleset_request
       url re#(.+)#.          // required
-      config re#(.*)#        // optional
-      setting(url,config)
+      setting(url)
     pre {
       rid = url.extract(re#.*/([^/]+)[.]krl$#).head()
     }
-    ctx:install(url,config.defaultsTo({}))
+    ctx:install(url,event:attr("config").defaultsTo({}))
     fired {
       raise wrangler event "ruleset_installed"
         attributes event:attrs.put({"rids": [rid]})
