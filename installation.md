@@ -33,7 +33,7 @@ For how this looks when it's being used, see [this page](https://github.com/Pico
   rule install_relative_ruleset {
     select when wrangler install_ruleset_request
       absoluteURL re#(.+)#   // required
-      rid re#(.+)#.          // required
+      rid re#(.+)#           // required
       setting(absoluteURL,rid)
     pre {
       parts = absoluteURL.split("/")
@@ -46,7 +46,7 @@ For how this looks when it's being used, see [this page](https://github.com/Pico
   
   rule install_absolute_ruleset {
     select when wrangler install_ruleset_request
-      url re#(.+)#.          // required
+      url re#(.+)#           // required
       setting(url)
     pre {
       rid = url.extract(re#.*/([^/]+)[.]krl$#).head()
