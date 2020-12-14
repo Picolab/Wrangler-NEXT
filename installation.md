@@ -41,7 +41,8 @@ For how this looks when it's being used, see [this page](https://github.com/Pico
     }
     fired {
       raise wrangler event "install_ruleset_request"
-        attributes {"url":url, "config":event:attr("config"))
+        attributes {"url":url, "config":event:attr("config")}
+    }
   }
   
   rule install_absolute_ruleset {
