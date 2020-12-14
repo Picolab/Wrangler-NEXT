@@ -63,14 +63,15 @@ ruleset app_section_collection {
     pre {
       the_section = {"eci": event:attr("eci")}
       section_id = event:attr("section_id")
+      parts = ctx:rid_url.split("/")
+      url = parts.splice(parts.length()-1,1,"app_section.krl").join("/")
     }
     if section_id.klog("found section_id") then
       event:send(
         { "eci": the_section.get("eci"), "eid": "install-ruleset",
           "domain": "wrangler", "type": "install_ruleset_request",
           "attrs": {
-            "absoluteURL":ctx:rid_url,
-            "rid":"app_section",
+            "url":url,
             "config":{},
             "section_id":section_id
           }
