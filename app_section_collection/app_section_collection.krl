@@ -16,7 +16,7 @@ ruleset app_section_collection {
     wellKnown_Rx = function(section_id) {
       eci = ent:sections{[section_id,"eci"]}
       eci.isnull() => null
-        | ctx:query(eci,"io.picolabs.subscription","wellKnown_Rx")
+        | ctx:query(eci,"io.picolabs.subscription","wellKnown_Rx"){"id"}
     }
   }
   rule initialize_sections {
