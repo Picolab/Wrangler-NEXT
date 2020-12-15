@@ -1,7 +1,7 @@
 ruleset app_section_collection {
   meta {
     use module io.picolabs.wrangler alias wrangler
-    shares nameFromID, showChildren, sections
+    shares nameFromID, showChildren, sections, wellKnown_Rx
   }
   global {
     nameFromID = function(section_id) {
@@ -12,6 +12,11 @@ ruleset app_section_collection {
     }
     sections = function() {
       ent:sections
+    }
+    wellKnown_Rx = function(section_id) {
+      eci = ent:sections{[section_id,"eci"]}
+      eci.isnull() => null
+        | ctx:query(eci,"io.picolabs.subscription","wellKnown_Rx")
     }
   }
   rule initialize_sections {
