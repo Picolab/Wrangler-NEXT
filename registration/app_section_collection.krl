@@ -1,6 +1,7 @@
 ruleset app_section_collection {
   meta {
     use module io.picolabs.wrangler alias wrangler
+    use module io.picolabs.subscription alias subs
     shares nameFromID, showChildren, sections, wellKnown_Rx
   }
   global {
@@ -18,10 +19,27 @@ ruleset app_section_collection {
       eci.isnull() => null
         | ctx:query(eci,"io.picolabs.subscription","wellKnown_Rx"){"id"}
     }
+    tags = ["app_section_collection"]
+    eventPolicy = {
+      "allow": [
+        { "domain": "section", "name": "*" },
+      ],
+      "deny": []
+    }
+    queryPolicy = {
+      "allow": [
+        { "rid": ctx:rid, "name": "*" }
+      ],
+      "deny": []
+    }
   }
-  rule initialize_sections {
-    select when section needs_initialization
-    always {
+  rule initialize_section_collection_pico {
+    select when wrangler ruleset_installed
+      where event:attr("rids") >< ctx:rid
+    if ent:section_collection_pico_eci.isnull() then
+      wrangler:createChannel(tags,eventPolicy,queryPolicy) setting(channel)
+    fired {
+      ent:section_collection_pico_eci := channel{"id"}
       ent:sections := {}
     }
   }
@@ -93,5 +111,19 @@ ruleset app_section_collection {
     fired {
       ent:sections{[section_id,"wellKnown_eci"]} := wellKnown_eci
     }
+  }
+  rule identify_to_registration {
+    select when wrangler ruleset_installed
+      where event:attr("rids") >< ctx:rid
+    pre {
+      parent_eci = wrangler:parent_eci()
+      wellKnown_eci = subs:wellKnown_Rx(){"id"}
+    }
+    event:send({"eci":parent_eci,
+      "domain": "section", "type": "identify",
+      "attrs": {
+        "wellKnown_eci": wellKnown_eci
+      }
+    })
   }
 }
