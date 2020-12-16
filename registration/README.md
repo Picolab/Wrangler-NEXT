@@ -76,7 +76,7 @@ would create a subscription between Bob's student pico and the section pico.
 
 During registration, Bob would be able to see his courses with an API call like:
 ```
-/sky/cloud/ckiry80b600c7db2rb0ncagsg/app_student/courses
+/sky/cloud/ckirwlui2007udb2rd5bc77uy/app_student/courses
 ```
 
 The registrar would be able to see the class roster for a section with an API call like:
