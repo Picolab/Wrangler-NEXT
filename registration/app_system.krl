@@ -2,10 +2,7 @@ ruleset app_system {
   rule create_registration_pico {
     select when wrangler ruleset_installed
       where event:attr("rids") >< ctx:rid
-    pre {
-      registration_pico_eci = ent:registration_pico_eci
-    }
-    if registration_pico_eci.isnull() then noop()
+    if ent:registration_pico_eci.isnull() then noop()
     fired {
       raise wrangler event "new_child_request" attributes {
         "name":"Registration Pico"
@@ -25,6 +22,9 @@ ruleset app_system {
         "rid":"app_registration",
       })
     })
+    fired {
+      ent:registration_pico_eci := eci
+    }
   }
   rule initialize_child {
     select when wrangler new_child_created
