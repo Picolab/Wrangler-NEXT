@@ -53,4 +53,20 @@ ruleset app_student {
       }
     })
   }
+  rule auto_accept {
+    select when wrangler inbound_pending_subscription_added
+    pre {
+      my_role = event:attr("Rx_role")
+      their_role = event:attr("Tx_role")
+    }
+    if my_role=="student" && their_role=="registration" then noop()
+    fired {
+      raise wrangler event "pending_subscription_approval"
+        attributes event:attrs
+      ent:subscriptionId := event:attr("Id")
+    } else {
+      raise wrangler event "inbound_rejection"
+        attributes event:attrs
+    }
+  }
 }
