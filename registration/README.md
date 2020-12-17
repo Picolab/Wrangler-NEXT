@@ -14,7 +14,7 @@ This interface would also allow each student to see a list of their courses.
 The system consists of multiple picos, each playing a particular role,
 and each exposing channels as needed for operations.
 
-### Picos
+### Picos and rulesets
 
 - the root pico would hold the `app_system` ruleset
     - the Registration pico would hold the `app_registration` ruleset
@@ -23,7 +23,10 @@ and each exposing channels as needed for operations.
     - each student pico would hold the `app_student` ruleset
 
 Indentation shows the parent/child relationships.
-I.e. the Registration Pico is a direct child of the root pico, as are the student picos, etc.
+The root pico has as direct children the Registration Pico and student picos.
+The Registration pico has one direct child, the Section Collection pico.
+The Section Collection pico will have a pico for each section as a direct child.
+
 
 ### Channels
 
