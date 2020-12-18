@@ -2,7 +2,7 @@ ruleset app_student {
   meta {
     use module io.picolabs.wrangler alias wrangler
     use module io.picolabs.subscription alias subs
-    shares name, wellKnown_Rx, courses
+    shares name, wellKnown_Rx, classes
   }
   global {
     name = function(){
@@ -11,14 +11,14 @@ ruleset app_student {
     wellKnown_Rx = function(){
       ent:wellKnown_Rx
     }
-    courses = function(){
-      subs:established()
+    classes = function(){
+      ent:classes.values()
     }
     tags = ["app_student"]
     eventPolicy = {
       "allow": [
-        { "domain": "section", "name": "add" },
-        { "domain": "section", "name": "drop" },
+        { "domain": "section", "name": "add_request" },
+        { "domain": "section", "name": "drop_request" },
         { "domain": "student", "name": "new_subscription_request" },
       ],
       "deny": []
@@ -40,6 +40,7 @@ ruleset app_student {
       ent:wellKnown_Rx := event:attr("wellKnown_Rx")
       ent:student_eci := channel{"id"}
       raise student event "new_subscription_request"
+      ent:classes := {}
     }
   }
   rule make_a_subscription {
@@ -53,6 +54,22 @@ ruleset app_student {
       }
     })
   }
+  rule auto_accept_add {
+    select when wrangler inbound_pending_subscription_added
+      Rx_role re#^student$#
+      Tx_role re#^section$#
+    pre {
+      section_id = event:attr("name").split("-").tail().join("-")
+      //assumes student name does not contain a hyphen
+    }
+    fired {
+      ent:classes{event:attr("Id")} := section_id
+      raise wrangler event "pending_subscription_approval"
+        attributes event:attrs
+      raise student event "section_added" attributes event:attrs
+      last
+    }
+  }
   rule auto_accept {
     select when wrangler inbound_pending_subscription_added
     pre {
@@ -64,9 +81,26 @@ ruleset app_student {
       raise wrangler event "pending_subscription_approval"
         attributes event:attrs
       ent:subscriptionId := event:attr("Id")
+      ent:subscriptionTx := event:attr("Tx")
     } else {
       raise wrangler event "inbound_rejection"
         attributes event:attrs
     }
+  }
+  rule add_a_class {
+    select when section add_request
+      section_id re#(.+)# setting(section_id)
+    pre {
+      already_enrolled = classes() >< section_id
+    }
+    if not already_enrolled then
+      event:send({"eci":ent:subscriptionTx,
+        "domain":"section", "name":"add_request",
+        "attrs":{
+          "wellKnown_Tx":subs:wellKnown_Rx(){"id"},
+          "section_id":section_id,
+          "name":ent:name
+        }
+      })
   }
 }

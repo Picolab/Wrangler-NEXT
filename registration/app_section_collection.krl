@@ -126,4 +126,22 @@ ruleset app_section_collection {
       }
     })
   }
+  rule introduce_section_to_student {
+    select when section add_request
+    pre {
+      wellKnown_Tx = event:attr("wellKnown_Tx")
+      section_id = event:attr("section_id")
+      name = event:attr("name")
+      eci = wellKnown_Rx(section_id)
+    }
+    if eci then
+      event:send({"eci":eci,
+        "domain":"wrangler", "name":"subscription",
+        "attrs":{
+          "wellKnown_Tx":wellKnown_Tx,
+          "Rx_role":"section", "Tx_role":"student",
+          "name":name+"-"+section_id, "channel_type":"subscription"
+        }
+      })
+  }
 }
