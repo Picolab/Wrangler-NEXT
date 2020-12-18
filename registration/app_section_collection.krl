@@ -140,7 +140,8 @@ ruleset app_section_collection {
         "attrs":{
           "wellKnown_Tx":wellKnown_Tx,
           "Rx_role":"section", "Tx_role":"student",
-          "name":name+"-"+section_id, "channel_type":"subscription"
+          "name":name+"-"+section_id, "channel_type":"subscription",
+          "section_id":section_id
         }
       })
   }

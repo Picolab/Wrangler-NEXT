@@ -59,9 +59,9 @@ ruleset app_student {
       Rx_role re#^student$#
       Tx_role re#^section$#
     pre {
-      section_id = event:attr("name").split("-").tail().join("-")
-      //assumes student name does not contain a hyphen
+      section_id = event:attr("section_id")
     }
+    if section_id then noop()
     fired {
       ent:classes{event:attr("Id")} := section_id
       raise wrangler event "pending_subscription_approval"
