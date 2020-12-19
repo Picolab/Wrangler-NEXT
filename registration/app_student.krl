@@ -103,4 +103,20 @@ ruleset app_student {
         }
       })
   }
+  rule drop_a_class {
+    select when section drop_request
+    pre {
+      section_id = event:attr("section_id")
+      Id = ent:classes
+        .filter(function(x){x==section_id})
+        .keys()
+        .head()
+    }
+    if Id then noop()
+    fired {
+      clear ent:classes{Id}
+      raise wrangler event "subscription_cancellation"
+        attributes {"Id":Id}
+    }
+  }
 }
