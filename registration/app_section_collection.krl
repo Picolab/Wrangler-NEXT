@@ -15,9 +15,7 @@ ruleset app_section_collection {
       ent:sections
     }
     wellKnown_Rx = function(section_id) {
-      eci = ent:sections{[section_id,"eci"]}
-      eci.isnull() => null
-        | ctx:query(eci,"io.picolabs.subscription","wellKnown_Rx"){"id"}
+      ent:sections{[section_id,"wellKnown_eci"]}
     }
     tags = ["app_section_collection"]
     eventPolicy = {
