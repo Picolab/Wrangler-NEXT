@@ -25,14 +25,14 @@ ruleset app_student {
     }
     queryPolicy = {
       "allow": [
-        { "rid": ctx:rid, "name": "*" }
+        { "rid": meta:rid, "name": "*" }
       ],
       "deny": []
     }
   }
   rule capture_initial_state {
     select when wrangler ruleset_installed
-      where event:attr("rids") >< ctx:rid
+      where event:attr("rids") >< meta:rid
     if ent:student_eci.isnull() then
       wrangler:createChannel(tags,eventPolicy,queryPolicy) setting(channel)
     fired {

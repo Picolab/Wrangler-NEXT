@@ -1,7 +1,7 @@
 ruleset app_system {
   rule create_registration_pico {
     select when wrangler ruleset_installed
-      where event:attr("rids") >< ctx:rid
+      where event:attr("rids") >< meta:rid
     if ent:registration_pico_eci.isnull() then noop()
     fired {
       raise wrangler event "new_child_request" attributes {
@@ -18,7 +18,7 @@ ruleset app_system {
     event:send({"eci":eci,
       "domain":"wrangler", "type":"install_ruleset_request",
       "attrs":event:attrs.put({
-        "absoluteURL":ctx:rid_url,
+        "absoluteURL":meta:rulesetURI,
         "rid":"app_registration",
       })
     })
@@ -37,7 +37,7 @@ ruleset app_system {
     event:send({"eci":eci,
       "domain":"wrangler", "type":"install_ruleset_request",
       "attrs":event:attrs.put({
-        "absoluteURL":ctx:rid_url,
+        "absoluteURL":meta:rulesetURI,
         "rid":"app_student",
       })
     })

@@ -17,14 +17,14 @@ ruleset app_registration {
     }
     queryPolicy = {
       "allow": [
-        { "rid": ctx:rid, "name": "*" }
+        { "rid": meta:rid, "name": "*" }
       ],
       "deny": []
     }
   }
   rule initialize_app_registration {
     select when wrangler ruleset_installed
-      where event:attr("rids") >< ctx:rid
+      where event:attr("rids") >< meta:rid
     if ent:registration_eci.isnull() then
       wrangler:createChannel(tags,eventPolicy,queryPolicy) setting(channel)
     fired {
@@ -44,7 +44,7 @@ ruleset app_registration {
     event:send({"eci":eci,
       "domain":"wrangler", "type":"install_ruleset_request",
       "attrs":event:attrs.put({
-        "absoluteURL":ctx:rid_url,
+        "absoluteURL":meta:rulesetURI,
         "rid":"app_section_collection",
       })
     })

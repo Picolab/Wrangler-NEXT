@@ -26,14 +26,14 @@ ruleset app_section_collection {
     }
     queryPolicy = {
       "allow": [
-        { "rid": ctx:rid, "name": "*" }
+        { "rid": meta:rid, "name": "*" }
       ],
       "deny": []
     }
   }
   rule initialize_section_collection_pico {
     select when wrangler ruleset_installed
-      where event:attr("rids") >< ctx:rid
+      where event:attr("rids") >< meta:rid
     if ent:section_collection_pico_eci.isnull() then
       wrangler:createChannel(tags,eventPolicy,queryPolicy) setting(channel)
     fired {
@@ -90,7 +90,7 @@ ruleset app_section_collection {
         { "eci": the_section.get("eci"), "eid": "install-ruleset",
           "domain": "wrangler", "type": "install_ruleset_request",
           "attrs": {
-            "absoluteURL":ctx:rid_url,
+            "absoluteURL":meta:rulesetURI,
             "rid":"app_section",
             "config":{},
             "section_id":section_id
@@ -112,7 +112,7 @@ ruleset app_section_collection {
   }
   rule identify_to_registration {
     select when wrangler ruleset_installed
-      where event:attr("rids") >< ctx:rid
+      where event:attr("rids") >< meta:rid
     pre {
       parent_eci = wrangler:parent_eci()
       wellKnown_eci = subs:wellKnown_Rx(){"id"}
